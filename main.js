@@ -1,3 +1,4 @@
+//Enlaces a html
 const pokeCard = document.querySelector(`[data-poke-card]`);
 const pokeNombre = document.querySelector(`[data-poke-nombre]`);
 const pokeImg = document.querySelector(`[data-poke-img]`);
@@ -5,7 +6,7 @@ const pokeImgContainer = document.querySelector(`[data-poke-img-container]`);
 const pokeId = document.querySelector(`[data-poke-id]`);
 const pokeEstadisticas = document.querySelector(`[date-poke-estadisticas]`);
 const pokeTipos = document.querySelector(`[date-poke-tipo]`);
-
+//Color por tipo
 const colorTipos = {
 	electric: "#FFEA70",
 	normal: "#B09398",
@@ -25,33 +26,38 @@ const colorTipos = {
 	fighting: "#2F2F2F",
 	default: "#2A1A1F",
 };
-
+//busca el pokemon por nombre en la api
 const buscarPokemon = (event) => {
 	event.preventDefault();
 	const { value } = event.target.pokemon;
 	fetch(`https://pokeapi.co/api/v2/pokemon/${value.toLowerCase()}`)
 		.then((data) => data.json())
 		.then((response) => renderPokemonData(response))
+		//si tira error , llama a la funcion
 		.catch((err) => noEncontrado());
 };
+//muestra el el resultado y saca habilidades, tipo y estadisticas
 const renderPokemonData = (data) => {
 	const poke_sprite = data.sprites.front_default;
 	const { stats, types, abilities } = data;
+	//verifica los datos
 	console.log(data);
-
 	pokeNombre.textContent = data.name.toUpperCase();
 	pokeImg.setAttribute("src", poke_sprite);
 	pokeId.textContent = `Nº ${data.id}`;
+	//funcion que llama a tipos y estadisticas
 	setCardColor(types);
 	mostrarPokemonTipos(types);
 	mostrarPokemonEst(stats);
 };
+//pokemon tipos , estilos
 const setCardColor = (types) => {
 	const color1 = colorTipos[types[0].type.name];
 	const color2 = types[1] ? colorTipos[types[1].type.name] : colorTipos.default;
 	pokeImg.style.background = `radial-gradient(${color2} 33%, ${color1} 33%)`;
 	pokeImg.style.backgroundSize = " 5px 5px";
 };
+//crea el tipo de pokemon mediante forEach
 const mostrarPokemonTipos = (types) => {
 	pokeTipos.innerHTML = "";
 	types.forEach((type) => {
@@ -61,6 +67,7 @@ const mostrarPokemonTipos = (types) => {
 		pokeTipos.appendChild(typeTextElement);
 	});
 };
+//crea el estadisticas de pokemon mediante forEach
 const mostrarPokemonEst = (stats) => {
 	pokeEstadisticas.innerHTML = "";
 	stats.forEach((stat) => {
@@ -74,6 +81,7 @@ const mostrarPokemonEst = (stats) => {
 		pokeEstadisticas.appendChild(divEstadisticas);
 	});
 };
+//si no encuantra un pokemon
 const noEncontrado = () => {
 	pokeNombre.textContent = `No Encontrado`;
 	pokeImg.setAttribute(`src`, `./img/pokemon-desconocido.png`);
