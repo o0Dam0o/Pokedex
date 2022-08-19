@@ -30,6 +30,7 @@ const colorTipos = {
 const buscarPokemon = (event) => {
 	event.preventDefault();
 	const { value } = event.target.pokemon;
+	//trae la informacion
 	fetch(`https://pokeapi.co/api/v2/pokemon/${value.toLowerCase()}`)
 		.then((data) => data.json())
 		.then((response) => renderPokemonData(response))
