@@ -1,6 +1,20 @@
+.logo{
+    font-size: 40px;
+    
+}
+button{
+    border: none;
+    outline:none;
+    background-color: rgb(255, 255, 255);
+}
+.fav{
+color: rgba(236, 235, 235, 0.884);
+}
+.pokemon-nombre{
+    font-size: 1.3rem;
+}
 .poke-card {
     position: relative;
-    height: fit-content;
     font-family: 'Roboto Mono', monospace;
     max-width: 300px;
     border-radius: 4px;
