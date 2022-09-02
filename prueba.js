@@ -3,6 +3,7 @@ const spinner = document.querySelector("#spinner");
 const previous = document.querySelector("#previous");
 const next = document.querySelector("#next");
 const favorito = document.querySelector("#favoritos");
+const inicio = document.querySelector(`#inicio`);
 let offset = 1;
 let limit = 13;
 const favoritos = [];
@@ -110,12 +111,6 @@ const fav = (data) => {
 		console.log(favoritos);
 	});
 };
-favorito.addEventListener("click", () => {
-	removerPokemons(principal);
-	favoritos.forEach((e) => {
-		renderPokemonData(e);
-	});
-});
 
 const mostrarPokemonTipos = (types) => {
 	const pokeTipos = document.createElement("div");
@@ -145,10 +140,24 @@ const mostrarPokemonEst = (stats) => {
 	});
 	return pokeEstadisticas;
 };
+
 const PokemonShow = (offset, limit) => {
 	spinner.style.display = "block";
 	for (let index = offset; index <= offset + limit; index++) {
 		pokemons(index);
 	}
 };
+favorito.addEventListener("click", () => {
+	removerPokemons(principal);
+	favoritos.forEach((e) => {
+		renderPokemonData(e);
+		const fav = document.getElementById(`${e.id}`);
+		fav.style.color = "red";
+		console.log(fav);
+	});
+});
 PokemonShow(offset, limit);
+inicio.addEventListener("click", () => {
+	removerPokemons(principal);
+	PokemonShow(offset, limit);
+});
