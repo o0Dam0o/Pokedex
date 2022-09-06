@@ -27,7 +27,7 @@
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container-fluid flex-column">
-				<a class="navbar-brand logo" href="#"
+				<a class="navbar-brand logo"
 					>P<img
 						src="./img/pokemon-symbol-logo-png-31.png"
 						width="30px"
@@ -63,7 +63,7 @@
 							<a class="nav-link" href="#">VS</a>
 						</li>
 					</ul>
-					<form class="d-flex" role="search" onsubmit="buscarPokemon(event)">
+					<form class="d-flex" role="search" onsubmit="buscarPokemon()">
 						<input
 							name="pokemon"
 							class="form-control me-2"
@@ -99,15 +99,13 @@
 				<div date-poke-estadisticas class="poke-estadisticas"></div>
 			</div> -->
 		</main>
-		<nav aria-label="Page navigation example">
+		<nav aria-label="Page navigation example" id="pagina">
 			<ul class="pagination justify-content-center">
 				<li class="page-item">
 					<a class="page-link" href="#" aria-label="Previous" id="previous">
 						<span aria-hidden="true">&laquo;</span>
 					</a>
 				</li>
-				<li class="page-item"><a class="page-link" href="#">1</a></li>
-
 				<li class="page-item">
 					<a class="page-link" href="#" aria-label="Next" id="next">
 						<span aria-hidden="true">&raquo;</span>

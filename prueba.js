@@ -4,9 +4,12 @@ const previous = document.querySelector("#previous");
 const next = document.querySelector("#next");
 const favorito = document.querySelector("#favoritos");
 const inicio = document.querySelector(`#inicio`);
+const pagina = document.querySelector(`#pagina`);
 let offset = 1;
 let limit = 13;
-const favoritos = [];
+let localFav = [];
+console.log(localFav.length);
+
 const removeDuplicates = (arr) => {
 	let mySet = new Set(arr);
 	return Array.from(mySet);
@@ -29,13 +32,11 @@ const removerPokemons = (parent) => {
 	}
 };
 
-const pokemons = (id) => {
-	fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-		.then((data) => data.json())
-		.then((response) => {
-			renderPokemonData(response);
-			spinner.style.display = "none";
-		});
+const pokemons = async (id) => {
+	const data = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+	const response = await data.json();
+	renderPokemonData(response);
+	spinner.style.display = "none";
 };
 const colorTipos = {
 	electric: "#FFEA70",
@@ -68,7 +69,7 @@ const renderPokemonData = (data) => {
 	pokeCard.classList.add("col-md-4", "m-3");
 	pokeCard.classList.add("poke-card");
 	pokeCard.innerHTML = `	
-	<div class="pokemon-nombre">${pokeNombre}<button type="submit"><i id="${data.id}" style="color:black"class="fa-solid fa-heart favw"
+	<div class="pokemon-nombre">${pokeNombre}<button type="submit" ><i id="${data.id}" style="color:black"class="fa-solid fa-heart favw"
 	}></i></button></div>
 	<div data-poke-img-container class="img-container">
 		<img
@@ -80,38 +81,47 @@ const renderPokemonData = (data) => {
 	</div>
 	<div data-poke-id>Nº ${pokeId}</div>
 		`;
-	const img = document.getElementsByName("img");
 	pokeCard.appendChild(mostrarPokemonTipos(types));
 	pokeCard.appendChild(mostrarPokemonEst(stats));
 
 	principal.appendChild(pokeCard);
 	fav(data);
+	coloref(data);
 };
-
+function coloref(data) {
+	let colorf = JSON.parse(localStorage.getItem("favo"));
+	if (colorf !== null) {
+		for (let index = 0; index < colorf.length; index++) {
+			if (colorf[index].id == data.id) {
+				let fav = document.getElementById(`${data.id}`);
+				fav.style.color = "red";
+			}
+		}
+	}
+}
 const fav = (data) => {
 	let fav = document.getElementById(`${data.id}`);
 	fav.addEventListener("click", () => {
-		if (favoritos.length == 0) {
-			favoritos.push(data);
-			fav.style.color = "red";
-		} else {
-			console.log(fav.id);
-			if (fav.style.color !== "red") {
-				favoritos.push(data);
+		if (localFav == 0 || fav.style.color !== "red") {
+			if (Array.isArray(localFav)) {
+				localFav.push(data);
 				fav.style.color = "red";
 			} else {
-				const o = favoritos.findIndex((el) => {
-					return el.id == fav.id;
-				});
-				console.log(o);
-				fav.style.color = "black";
-				favoritos.splice(o, 1);
+				const arr = localFav || [];
+				localFav = arr;
+				localFav.push(data);
+				fav.style.color = "red";
 			}
+		} else {
+			const o = localFav.findIndex((el) => {
+				return el.id == fav.id;
+			});
+			localFav.splice(o, 1);
+			fav.style.color = "black";
 		}
-		console.log(favoritos);
+		localStorage.setItem("favo", JSON.stringify(localFav));
 	});
 };
-
 const mostrarPokemonTipos = (types) => {
 	const pokeTipos = document.createElement("div");
 	pokeTipos.classList.add("poke-tipos");
@@ -147,17 +157,38 @@ const PokemonShow = (offset, limit) => {
 		pokemons(index);
 	}
 };
+
 favorito.addEventListener("click", () => {
+	pagina.style.display = "none";
 	removerPokemons(principal);
-	favoritos.forEach((e) => {
-		renderPokemonData(e);
-		const fav = document.getElementById(`${e.id}`);
-		fav.style.color = "red";
-		console.log(fav);
-	});
+	localFav = JSON.parse(localStorage.getItem("favo"));
+	if (localFav !== null && length.length !== 0) {
+		localFav.forEach((e) => {
+			renderPokemonData(e);
+			const fav = document.getElementById(`${e.id}`);
+			fav.style.color = "red";
+		});
+		localFav.length == 0 && noEncontrado();
+	} else {
+		noEncontrado();
+	}
 });
 PokemonShow(offset, limit);
 inicio.addEventListener("click", () => {
+	pagina.style.display = "block";
 	removerPokemons(principal);
 	PokemonShow(offset, limit);
 });
+const noEncontrado = () => {
+	let pokeCard = document.createElement("div");
+	pokeCard.classList.add("poke-card");
+	let pokeNombre = document.createElement("div");
+	let pokeImg = document.createElement("img");
+	pokeNombre.textContent = `No Encontrado`;
+	pokeImg.setAttribute(`src`, `./img/pokemon-desconocido.png`);
+	pokeImg.classList.add("poke-img");
+	pokeImg.style.background = `#fff`;
+	pokeCard.appendChild(pokeNombre);
+	pokeCard.appendChild(pokeImg);
+	principal.appendChild(pokeCard);
+};
