@@ -100,7 +100,7 @@ const renderPokemonData = (data) => {
 			class="poke-img"
 			src="${pokeImg}"
 			alt="De quien este pokemon"
-		/><i class="fa-solid fa-cart-shopping mt-3"></i></a>
+		/><i class="fa-solid fa-cart-shopping"></i></a>
 	</div>
 	<div data-poke-id>Nº ${pokeId}</div>
 		`;
